@@ -8,7 +8,8 @@ class WebappTests
 {
 
 	@Test
-	void contextLoads() {
+	void contextLoads()
+	{
 	}
 
 }
