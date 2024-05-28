@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  httpbin-service:
+    image: mccutchen/go-httpbin:latest
+    container_name: go-httpbin
+    ports:
+      - "8080:8080"
+
+  webapp-service:
+    image: webapp-service:v1
+    container_name: webapp
+    environment:
+      - JAVA_OPTS=-Dspring.threads.virtual.enabled=true -Dhttp-bin.server.url=http://httpbin-service:8080
+    ports:
+      - "8090:8090"
+    depends_on:
+      - httpbin-service
