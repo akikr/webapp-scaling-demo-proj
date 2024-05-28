@@ -63,7 +63,7 @@ docker build --no-cache -t webapp-service:v1 -f Dockerfile .
 ```
  Dockerfile:-
 
-```
+```dockerfile
 FROM maven:3-eclipse-temurin-21-alpine AS build
 RUN mkdir /usr/app
 COPY . /usr/app
@@ -154,4 +154,4 @@ Summary:
   Requests/sec: 15.4616
 ```
 
-reference: [**﻿spring-tips-virtual-thread**](https://youtube.com/watch?v=9iH5h11YJak&list=PLZkza32CnID1D-U7LOXq-qPkLW6rpqVQ5&index=3)**﻿**
+reference: [**﻿spring-tips-virtual-threads**](https://youtube.com/watch?v=9iH5h11YJak&list=PLZkza32CnID1D-U7LOXq-qPkLW6rpqVQ5&index=3)**﻿**
