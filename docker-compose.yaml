@@ -11,7 +11,8 @@ services:
     image: webapp-service:v1
     container_name: webapp
     environment:
-      - JAVA_OPTS=-Dspring.threads.virtual.enabled=true -Dhttp-bin.server.url=http://httpbin-service:8080
+      - JAVA_OPTS=-Xmx1g
+      - APP_ARGS=--spring.profiles.active=prod --spring.threads.virtual.enabled=true --http-bin.server.url=http://httpbin-service:8080
     ports:
       - "8090:8090"
     depends_on:
