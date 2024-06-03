@@ -18,21 +18,11 @@ public class Webapp
 	public static void main(String... args)
 	{
 		log.info("Started executing 'main' method with arguments: {}", Arrays.asList(args));
-		try
-		{
-			var availableThreads = Integer.toString(Runtime.getRuntime().availableProcessors());
-			System.setProperty("server.tomcat.threads.max", availableThreads);
-			System.setProperty("jdk.virtualThreadScheduler.maxPoolSize", availableThreads);
-			SpringApplication.run(Webapp.class, args);
-		}
-		catch (Exception e)
-		{
-			log.error("Staring 'main' method failed, due to: {}", e.getMessage());
-		}
-		finally
-		{
-			log.info("Completed executing 'main' method");
-		}
+		var availableThreads = Integer.toString(Runtime.getRuntime().availableProcessors());
+		System.setProperty("server.tomcat.threads.max", availableThreads);
+		System.setProperty("jdk.virtualThreadScheduler.maxPoolSize", availableThreads);
+		SpringApplication.run(Webapp.class, args);
+		log.info("Completed executing 'main' method");
 	}
 
 	@Bean
