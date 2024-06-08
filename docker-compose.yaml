@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   httpbin-service:
@@ -13,6 +13,12 @@ services:
     environment:
       - JAVA_OPTS=-Xmx1g
       - APP_ARGS=--spring.profiles.active=prod --spring.threads.virtual.enabled=true --http-bin.server.url=http://httpbin-service:8080
+    # To externalize the configurations:
+    # Pass the config-location to APP_ARGS as follows:-
+    #  - APP_ARGS=--spring.config.location=/opt/webapp/conf/application.properties OR --spring.config.additional-location=/opt/webapp/conf/application.properties
+    # Mount a volume with your path-to-application.properties file location
+    # volumes:
+    #   - <path-to-application.properties-file>:/opt/webapp/conf:ro
     ports:
       - "8090:8090"
     depends_on:
