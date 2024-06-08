@@ -23,6 +23,7 @@ public class Webapp
 		System.setProperty("jdk.virtualThreadScheduler.maxPoolSize", availableThreads);
 		SpringApplication.run(Webapp.class, args);
 		log.info("Completed executing 'main' method");
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> log.info("Shutting down webapp !!")));
 	}
 
 	@Bean
