@@ -3,12 +3,7 @@
 ### => problem statement:-
 - spring request response model, java I/O uses 1 thread per request
     - To handle more requests you had to create more threads (operating system threads) and that wasn't so easy to do it uses lot of RAM and ultimately you hit the limit.
-### => probable solutions:-
-- To go reactive, which offload blocking operations, but its complexity limits mainstream adoption
-- To use non-blocking I/O something like GO routines
-- To make thread creation cheap, and here java gives us virtual threads
 ---
-
 ### project-details:-
 - It's a demo project to show how we can scale a java-app without using expensive thread creation or using any reactive programming paradigm(which is very difficult to implement and maintain for the a large application). We will be using java's virtual threads (developed under project; Loom)
 
