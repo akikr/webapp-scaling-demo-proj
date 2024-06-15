@@ -61,6 +61,11 @@ java -jar target/webapp-service-0.0.1-SNAPSHOT.jar
 ```bash
 docker build --no-cache -t webapp-service:v1 -f Dockerfile .
 ```
+- Build custom nginx-service image:-
+```bash
+docker build -t nginx-service:v1 -f nginx-conf/Dockerfile nginx-conf/.
+```
+
  Dockerfile:-
 
 ```dockerfile
