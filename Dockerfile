@@ -5,7 +5,7 @@ RUN mkdir -p /usr/app
 COPY . /usr/app
 WORKDIR /usr/app
 # Build the application
-RUN ./mvnw clean package
+RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package
 # Build the application specific JRE
 RUN jdeps --ignore-missing-deps -q \
     --recursive \
