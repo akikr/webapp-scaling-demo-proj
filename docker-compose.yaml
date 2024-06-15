@@ -2,14 +2,12 @@ version: "3"
 
 services:
   httpbin-service:
-    image: mccutchen/go-httpbin:latest
-    container_name: go-httpbin
+    image: docker.io/mccutchen/go-httpbin:latest
     ports:
       - "8080:8080"
 
   webapp-service:
     image: webapp-service:v1
-    container_name: webapp
     environment:
       - JAVA_OPTS=-Xmx1g
       - APP_ARGS=--spring.profiles.active=prod --spring.threads.virtual.enabled=true --http-bin.server.url=http://httpbin-service:8080
@@ -20,6 +18,25 @@ services:
     # volumes:
     #   - <path-to-application.properties-file>:/opt/webapp/conf:ro
     ports:
-      - "8090:8090"
+      - "8090"
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: "200M"
+        reservations:
+          cpus: "1.0"
+          memory: "100M"
     depends_on:
-      - httpbin-service
+      httpbin-service:
+        condition: service_started
+
+  nginx:
+    image: nginx-service:v1
+    ports:
+      - "8000:8000"
+    depends_on:
+      webapp-service:
+        condition: service_started

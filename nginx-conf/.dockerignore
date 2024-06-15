@@ -1,0 +1,14 @@
+README.md
+
+.git
+.gitignore
+
+### IntelliJ IDEA ###
+.idea/
+
+### VS Code ###
+.vscode/
+
+Dockerfile
+
+**/*.log
