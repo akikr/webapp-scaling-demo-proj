@@ -2,6 +2,7 @@ package com.webapp.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,9 @@ import java.util.Map;
 public class WebappController
 {
 	private static final Logger log = LoggerFactory.getLogger(WebappController.class);
+
+	@Value("${http-bin.server.url}")
+	private String serverUrl;
 
 	private final RestClient restClient;
 
@@ -38,7 +42,7 @@ public class WebappController
 		try
 		{
 			var requestToHttBin = restClient.get()
-					.uri("/delay/" + seconds)
+					.uri(serverUrl + "/delay/" + seconds)
 					.retrieve()
 					.toEntity(String.class);
 
