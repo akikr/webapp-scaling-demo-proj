@@ -1,4 +1,4 @@
-version: "3"
+version: "3.6"
 
 services:
   httpbin-service:
@@ -21,7 +21,7 @@ services:
   webapp-service:
     image: webapp-service:v1
     environment:
-      - APP_ARGS=--spring.profiles.active=prod --spring.threads.virtual.enabled=false --http-bin.server.url=http://nginx:8000/httpbin
+      - APP_ARGS=--spring.profiles.active=dev --spring.threads.virtual.enabled=false --http-bin.server.url=http://api-gateway:8000/httpbin
     # - JAVA_OPTS=-Xmx1g
     # To externalize the configurations:
     # Pass the config-location to APP_ARGS as follows:-
@@ -47,8 +47,9 @@ services:
 #    networks :
 #      - load-balancer
 
-  nginx:
+  api-gateway:
     image: nginx-service:v1
+    container_name: nginx-api-gateway
     ports:
       - "8000:8000"
 #    volumes:
@@ -65,3 +66,4 @@ networks:
 #  load-balancer:
   default:
     driver: bridge
+    name : dev-network
