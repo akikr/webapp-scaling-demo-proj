@@ -52,8 +52,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-    # - <path-to-nginx.conf>:/etc/nginx/nginx.conf:ro
-    - /Users/ankitkumar/Documents/docs/git-local/webapp-scaling-demo-proj/nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
+     - <path-to-nginx.conf>:/etc/nginx/nginx.conf:ro
     depends_on:
       webapp-service:
         condition: service_started
