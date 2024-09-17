@@ -15,8 +15,8 @@ services:
         reservations :
           cpus : "1.0"
           memory : "100M"
-    networks :
-      - load-balancer
+#    networks :
+#      - load-balancer
 
   webapp-service:
     image: webapp-service:v1
@@ -44,23 +44,25 @@ services:
     depends_on:
       httpbin-service:
         condition: service_started
-    networks :
-      - load-balancer
+#    networks :
+#      - load-balancer
 
   nginx:
     image: nginx-service:v1
     ports:
       - "8000:8000"
     volumes:
-     - <path-to-nginx.conf>:/etc/nginx/nginx.conf:ro
+    # - <path-to-nginx.conf>:/etc/nginx/nginx.conf:ro
+    - /Users/ankitkumar/Documents/docs/git-local/webapp-scaling-demo-proj/nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       webapp-service:
         condition: service_started
       httpbin-service :
         condition : service_started
-    networks:
-      - load-balancer
+#    networks:
+#      - load-balancer
 
 networks:
-  load-balancer:
+#  load-balancer:
+  default:
     driver: bridge
