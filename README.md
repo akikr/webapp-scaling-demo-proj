@@ -154,4 +154,4 @@ Summary:
   Requests/sec: 15.4616
 ```
 
-reference: [**﻿spring-tips-virtual-threads**](https://youtube.com/watch?v=9iH5h11YJak&list=PLZkza32CnID1D-U7LOXq-qPkLW6rpqVQ5&index=3)**﻿**
+reference: [**﻿spring-tips-virtual-threads**](https://youtube.com/watch?v=9iH5h11YJak) & [**﻿the-magic-behind-virtual-threads**](https://www.youtube.com/watch?v=HQsYsUac51g)**﻿**
