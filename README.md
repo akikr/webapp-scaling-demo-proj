@@ -1,19 +1,25 @@
-## Scaling a spring-boot application with java-virtual-threads
+# Scaling a spring-boot application with java-virtual-threads
 
-### => problem statement:-
+## => problem statement:-
+
 - spring request response model, java I/O uses 1 thread per request
 - To handle more requests you had to create more threads (operating system threads) and that wasn't so easy to do it uses a lot of RAM, and ultimately you hit the limit.
-### => probable solutions:-
+
+## => probable solutions:-
+
 - To go reactive, which offload blocking operations, but its complexity limits mainstream adoption
 - To use non-blocking I/O something like GO routines
 - To make thread creation cheap, and here java gives us virtual threads
 
 ---
+
 ### project-details:-
+
 - It's a demo project to show how we can scale a java-app without using expensive thread creation or using any reactive programming paradigm(which is very difficult to implement and maintain for the large application). We will be using java's virtual threads (developed under project; Loom)
 
-### project-setup: 
-- project-setup using spring-boot-cli tool [﻿spring-boot-cli](https://docs.spring.io/spring-boot/cli/index.html) :-
+### project-setup:-
+
+- project-setup using spring-boot-cli tool [spring-boot-cli](https://docs.spring.io/spring-boot/cli/index.html) :-
 
 ```bash
 spring init \
@@ -31,13 +37,16 @@ spring init \
 --version=0.0.1-SNAPSHOT \
 webapp-scaling-demo-proj
 ```
+
 OR
+
 ```bash
 git clone https://github.com/akikr/webapp-scaling-demo-proj.git
 ```
+
 ---
 
-#### The project uses SDKMAN for managing Java and Maven versions.
+#### The project uses SDKMAN for managing Java and Maven versions
 
 To install SDKMAN refer: [sdkman.io](https://sdkman.io/install)
 
@@ -48,6 +57,7 @@ touch .sdkmanrc
 ```
 
 File [.sdkmanrc](.sdkmanrc)
+
 ```text
 # Enable auto-env through the sdkman_auto_env config
 # Add key=value pairs of SDKs to use below
@@ -63,16 +73,21 @@ sdk env
 ```
 
 ---
+
 - Build project:-
+
 ```bash
 ./mvnw clean package
 #OR
 docker compose -f docker-compose.yaml up --build
 ```
+
 - Run project [local]:-
+
 ```bash
 docker compose -f docker-compose.yaml up;docker compose -f docker-compose.yaml down
 ```
+
 ---
  Dockerfile [A multi-stage Dockerfile]:-
 
@@ -122,7 +137,6 @@ USER appuser
 EXPOSE 8090
 # Run using start-up script
 CMD ["sh", "-c", "./start-app.sh"]
-
 ```
 
 A docker compose file using `traefik` as a loadbalancer and api-proxy to route the http request to webapp-service
@@ -196,17 +210,22 @@ services:
         condition: service_started
 
 ```
+
 - Run and see logs for webapp-service using docker-compose:-
+
 ```bash
 docker compose up -d;docker compose logs -f webapp-service;docker compose down 
 ```
+
 ---
-- Testing tools:-
-    - Use a [﻿httpbin.org](https://httpbin.org/) as a server-service in docker-container: `mccutchen/go-httpbin:latest` 
-    - Use a HTTP load generator: [﻿oha](https://github.com/hatoo/oha) to run a load test
 
+- ### Testing tools:-
 
-- Load test results [Deployed using docker compose] :-
+  - Use a [httpbin.org](https://httpbin.org/) as a server-service in docker-container: `mccutchen/go-httpbin:latest`
+  - Use a HTTP load generator: [oha](https://github.com/hatoo/oha) to run a load test
+
+### Load test results [Deployed using docker compose] :-
+
 ```yaml
 # With deployment configs:-
   deploy:
@@ -220,27 +239,31 @@ docker compose up -d;docker compose logs -f webapp-service;docker compose down
         cpus: "1.0"
         memory: "100M"
 ```
-- with traditional java-threads:-
-```
+
+- #### with traditional java-threads:-
+
+```text
 ❯ oha -c 50 -n 100 http://localhost/api/webapp/delay/3
 Summary:
   Success rate: 100.00%
-  Total:	151.0207 secs
-  Slowest:	75.5640 secs
-  Fastest:	3.0843 secs
-  Average:	57.3960 secs
-  Requests/sec:	0.6622
-```
-- with virtual java-threads:-
-```
-❯ oha -c 50 -n 100 http://localhost/api/webapp/delay/3
-Summary:
-  Success rate: 100.00%
-  Total:	6.1450 secs
-  Slowest:	3.1207 secs
-  Fastest:	3.0107 secs
-  Average:	3.0643 secs
-  Requests/sec:	16.2735
+  Total: 151.0207 secs
+  Slowest: 75.5640 secs
+  Fastest: 3.0843 secs
+  Average: 57.3960 secs
+  Requests/sec: 0.6622
 ```
 
-reference: [**﻿spring-tips-virtual-threads**](https://youtube.com/watch?v=9iH5h11YJak) & [**﻿the-magic-behind-virtual-threads**](https://www.youtube.com/watch?v=HQsYsUac51g)**﻿**
+- ### with virtual java-threads:-
+
+```text
+❯ oha -c 50 -n 100 http://localhost/api/webapp/delay/3
+Summary:
+  Success rate: 100.00%
+  Total: 6.1450 secs
+  Slowest: 3.1207 secs
+  Fastest: 3.0107 secs
+  Average: 3.0643 secs
+  Requests/sec: 16.2735
+```
+
+### reference: [**spring-tips-virtual-threads**](https://youtube.com/watch?v=9iH5h11YJak) & [**the-magic-behind-virtual-threads**](https://www.youtube.com/watch?v=HQsYsUac51g)
