@@ -1,24 +1,32 @@
-version: "3"
-
 services:
   httpbin-service:
     image: docker.io/mccutchen/go-httpbin:latest
     ports:
-      - "8080:8080"
+      - "8080"
+    deploy :
+      mode : replicated
+      replicas : 1
 
   webapp-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: webapp-service:v1
     environment:
-      - JAVA_OPTS=-Xmx1g
-      - APP_ARGS=--spring.profiles.active=prod --spring.threads.virtual.enabled=true --http-bin.server.url=http://httpbin-service:8080
-    # To externalize the configurations:
-    # Pass the config-location to APP_ARGS as follows:-
-    #  - APP_ARGS=--spring.config.location=/opt/webapp/conf/application.properties OR --spring.config.additional-location=/opt/webapp/conf/application.properties
-    # Mount a volume with your path-to-application.properties file location
-    # volumes:
-    #   - <path-to-application.properties-file>:/opt/webapp/conf:ro
+      - APP_ARGS=--spring.profiles.active=dev --spring.threads.virtual.enabled=true --http-bin.server.url=http://httpbin-service:8080
+      #- JAVA_OPTS=-Xmx300m
     ports:
       - "8090"
+    labels:
+      - "traefik.enable=true"
+      # Route all the requests to 'webapp-service' via web-entrypoint on http port 80
+      - "traefik.http.routers.webapp-service.entrypoints=web"
+      # Route all the request with path-regex /api/* to this webapp-service
+      - "traefik.http.routers.webapp-service.rule=PathPrefix(`/api`)"
+      - "traefik.http.services.webapp-service.loadbalancer.server.port=8090"
+      # Strip /api prefix before forwarding to the service
+      - "traefik.http.middlewares.strip-api-prefix.stripprefix.prefixes=/api"
+      - "traefik.http.routers.webapp-service.middlewares=strip-api-prefix"
     deploy:
       mode: replicated
       replicas: 1
@@ -33,10 +41,24 @@ services:
       httpbin-service:
         condition: service_started
 
-  nginx:
-    image: nginx-service:v1
+  api-proxy:
+    image: traefik:v3.1
+    container_name: web-app-proxy
+    command:
+      # Enables access logging
+      - "--log.level=INFO"
+      - "--accesslog=true"
+      # Do not expose any docker containers unless explicitly told so
+      - "--providers.docker.exposedbydefault=false"
+      # Enables the web-entrypoint on http port 80
+      - "--entrypoints.web.address=:80"
     ports:
-      - "8000:8000"
+      - "80:80"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
+      httpbin-service:
+        condition: service_started
       webapp-service:
         condition: service_started

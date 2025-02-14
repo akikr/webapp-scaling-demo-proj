@@ -29,17 +29,17 @@ COPY --from=build /app-jre $JAVA_HOME
 RUN mkdir -p /usr/webapp
 COPY --from=build /usr/app/target/*.jar /usr/webapp/webapp-service.jar
 WORKDIR /usr/webapp
-# Copy the appliaction start-up script
-COPY start-app.sh .
+# Define environment variables for java-options and application-arguments
+ENV JAVA_OPTS=""
+ENV APP_ARGS=""
+# Build the application start-up script
+RUN echo 'java ${JAVA_OPTS} -jar webapp-service.jar ${APP_ARGS}' > ./start-app.sh
 # Set a non-root user: Add a system group 'appgroup' and a system user 'appuser' in this group
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 RUN chown -R appuser:appgroup /usr/webapp
 RUN chmod +x /usr/webapp/start-app.sh
 USER appuser
-# Define environment variables for java-options and application-arguments
-ENV JAVA_OPTS ''
-ENV APP_ARGS ''
 # Expose the application port
 EXPOSE 8090
 # Run using start-up script
-CMD [ "./start-app.sh" ]
+CMD ["sh", "-c", "./start-app.sh"]
