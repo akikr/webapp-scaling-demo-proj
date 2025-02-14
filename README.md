@@ -222,7 +222,7 @@ docker compose up -d;docker compose logs -f webapp-service;docker compose down
 - ### Testing tools:-
 
   - Use a [httpbin.org](https://httpbin.org/) as a server-service in docker-container: `mccutchen/go-httpbin:latest`
-  - Use a HTTP load generator: [oha](https://github.com/hatoo/oha) to run a load test
+  - Use the HTTP load generator: [oha](https://github.com/hatoo/oha) to run a load test
 
 ### Load test results [Deployed using docker compose] :-
 
