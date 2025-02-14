@@ -253,7 +253,7 @@ Summary:
   Requests/sec: 0.6622
 ```
 
-- ### with virtual java-threads:-
+- #### with virtual java-threads:-
 
 ```text
 ❯ oha -c 50 -n 100 http://localhost/api/webapp/delay/3
