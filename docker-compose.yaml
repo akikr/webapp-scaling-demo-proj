@@ -13,7 +13,7 @@ services:
       dockerfile: Dockerfile
     image: webapp-service:v1
     environment:
-      - APP_ARGS=--spring.profiles.active=dev --spring.threads.virtual.enabled=true --http-bin.server.url=http://httpbin-service:8080
+      - APP_ARGS=--spring.profiles.active=dev --spring.threads.virtual.enabled=true --http-bin.server.url=http://httpbin-service:8080 --management.zipkin.tracing.endpoint=http://zipkin-service:9411/api/v2/spans
       #- JAVA_OPTS=-Xmx300m
     ports:
       - "8090"
@@ -40,6 +40,17 @@ services:
     depends_on:
       httpbin-service:
         condition: service_started
+      zipkin-service:
+        condition: service_started
+
+  zipkin-service:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin-service
+    ports:
+      - "9411:9411" #Open Zipkin UI: http://localhost:9411
+    environment:
+      - STORAGE_TYPE=mem
+      - LOG_LEVEL=DEBUG
 
   api-proxy:
     image: traefik:v3.1
