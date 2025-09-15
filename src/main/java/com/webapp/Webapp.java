@@ -3,11 +3,13 @@ package com.webapp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
+import com.webapp.config.RestClientLoggingProperties;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.client.RestClient;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import java.util.Arrays;
+
+@EnableConfigurationProperties(RestClientLoggingProperties.class)
 
 @SpringBootApplication
 public class Webapp
@@ -26,11 +28,5 @@ public class Webapp
 
 		log.info("Completed executing 'main' method");
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> log.info("Shutting down webapp !!")));
-	}
-
-	@Bean
-	public RestClient restClient(RestClient.Builder builder)
-	{
-		return builder.build();
 	}
 }
