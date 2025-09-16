@@ -38,7 +38,7 @@ public class AppRestClient {
      * @return the HTTP response after execution
      * @throws IOException if an I/O error occurs
      *
-     * @implNote This method uses static logging methods from {@link RestClientInterceptor}
+     * @apiNote This method uses static logging methods from {@link RestClientInterceptor}
      */
     private ClientHttpResponse restClientInterceptor(
             HttpRequest request,

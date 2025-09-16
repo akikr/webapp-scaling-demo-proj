@@ -31,8 +31,8 @@ public interface RestClientInterceptor {
                 Request: %s %s
                 Headers: %s
                 Body: %s
-                -----------------------Request End------------------------
-                """.formatted(request.getMethod(), request.getURI(), requestHeaders, body);
+                -----------------------Request End------------------------"""
+                .formatted(request.getMethod(), request.getURI(), requestHeaders, body);
         log.debug("{}", requestData);
     }
 
@@ -52,8 +52,8 @@ public interface RestClientInterceptor {
                 Status: %s
                 Headers: %s
                 Body: %s
-                -----------------------Response End-----------------------
-                """.formatted(response.getStatusCode(), responseHeaders, body);
+                -----------------------Response End-----------------------"""
+                .formatted(response.getStatusCode(), responseHeaders, body);
         log.debug("{}", responseData);
     }
 }

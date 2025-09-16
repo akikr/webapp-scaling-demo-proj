@@ -19,7 +19,7 @@ import java.util.Map;
 
 @Controller
 @ResponseBody
-@RequestMapping(path = "/")
+@RequestMapping(path = "/v1")
 public class WebappController
 {
 	private static final Logger log = LoggerFactory.getLogger(WebappController.class);
@@ -44,6 +44,7 @@ public class WebappController
 	@GetMapping(path = "/delay/{seconds}")
 	public ResponseEntity<?> httpDelayEndpoint(@PathVariable(name = "seconds") String seconds)
 	{
+        log.info("Received request on [/v1/delay/{}] on [{}]", seconds, Thread.currentThread());
 		try
 		{
 			var requestToHttBin = restClient.get()
@@ -71,6 +72,7 @@ public class WebappController
     @GetMapping(path = "/get")
     public ResponseEntity<?> httpGetEndpoint()
     {
+        log.info("Received request on [/v1/get] on [{}]", Thread.currentThread());
         try
         {
             var requestToHttBin = restClient.get()
@@ -95,9 +97,39 @@ public class WebappController
         }
     }
 
+    @GetMapping(path = "/post")
+    public ResponseEntity<?> httpPostEndpoint()
+    {
+        log.info("Received request on [/v1/post] on [{}]", Thread.currentThread());
+        try
+        {
+            var requestToHttBin = restClient.post()
+                    .uri(serverUrl + "/post")
+                    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                    .body(Map.of("sample", "data"))
+                    .retrieve()
+                    .toEntity(String.class);
+
+            log.info("http-bin server responded: {} on [{}]", requestToHttBin.getStatusCode(), Thread.currentThread());
+
+            if (requestToHttBin.getStatusCode().is2xxSuccessful())
+                return ResponseEntity.ok()
+                        .body(Map.of("message", "success"));
+            else
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("message", "failed"));
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }
+
     @GetMapping(path = "/status/{statusCode}")
     public ResponseEntity<?> httpStatusEndpoint(@PathVariable(name = "statusCode") String statusCode)
     {
+        log.info("Received request on [/v1/status/{}] on [{}]", statusCode, Thread.currentThread());
         try
         {
             var requestToHttBin = restClient.get()
@@ -125,6 +157,7 @@ public class WebappController
     @GetMapping(path = "/response-headers")
     public ResponseEntity<?> httpResponseHeadersEndpoint(@RequestParam(name = "data") String data)
     {
+        log.info("Received request on [/v1/response-headers?data={}] on [{}]", data, Thread.currentThread());
         try
         {
             var requestToHttBin = restClient.get()
