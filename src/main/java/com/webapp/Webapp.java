@@ -10,7 +10,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import java.util.Arrays;
 
 @EnableConfigurationProperties(RestClientLoggingProperties.class)
-
 @SpringBootApplication
 public class Webapp
 {

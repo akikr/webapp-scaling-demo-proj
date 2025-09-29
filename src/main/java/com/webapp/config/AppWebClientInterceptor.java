@@ -10,7 +10,6 @@ import org.springframework.util.StringUtils;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Optional;
 
 public interface AppWebClientInterceptor {
@@ -28,7 +27,6 @@ public interface AppWebClientInterceptor {
                 Id: [%s:%s]
                 """.formatted(span.context().traceId(), span.context().spanId())));
         request.onRequestBegin(req -> requestData.append("""
-                -----------------------Request Start---------------------
                 Request: %s %s
                 """.formatted(req.getMethod(), req.getURI())
         ));
@@ -58,7 +56,6 @@ public interface AppWebClientInterceptor {
                 Id: [%s:%s]
                 """.formatted(span.context().traceId(), span.context().spanId())));
         request.onResponseBegin(res -> responseData.append("""
-                -----------------------Response Start---------------------
                 Status: %s
                 """.formatted(HttpStatus.valueOf(res.getStatus()))
         ));
@@ -87,7 +84,7 @@ public interface AppWebClientInterceptor {
             var body = StringUtils.hasText(requestBody) ? requestBody : "[No-Body]";
             requestData.append("""
                     Body: %s
-                    -----------------------Request End-----------------------"""
+                    """
                     .formatted(body));
             log.debug("{}", requestData);
         });
@@ -97,7 +94,7 @@ public interface AppWebClientInterceptor {
             var body = StringUtils.hasText(responseBody) ? responseBody : "[No-Body]";
             responseData.append("""
                     Body: %s
-                    -----------------------Response End-----------------------"""
+                    """
                     .formatted(body));
             log.debug("{}", responseData);
         });

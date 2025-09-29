@@ -1,5 +1,5 @@
 # Set the base-image for build stage
-FROM maven:3-eclipse-temurin-21-alpine AS build
+FROM maven:3-eclipse-temurin-25-alpine AS build
 # Set up working directory
 RUN mkdir -p /usr/app
 COPY . /usr/app
@@ -9,7 +9,7 @@ RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests
 # Build the application specific JRE
 RUN jdeps --ignore-missing-deps -q \
     --recursive \
-    --multi-release 21 \
+    --multi-release 25 \
     --print-module-deps \
     --class-path 'target/dependencies/*' \
     target/*.jar > modules.info

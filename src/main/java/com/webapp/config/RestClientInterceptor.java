@@ -2,7 +2,6 @@ package com.webapp.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
 
@@ -27,11 +26,10 @@ public interface RestClientInterceptor {
         }
 
         var requestData = """
-                -----------------------Request Start---------------------
                 Request: %s %s
                 Headers: %s
                 Body: %s
-                -----------------------Request End------------------------"""
+                """
                 .formatted(request.getMethod(), request.getURI(), requestHeaders, body);
         log.debug("{}", requestData);
     }
@@ -48,11 +46,10 @@ public interface RestClientInterceptor {
         }
 
         var responseData = """
-                -----------------------Response Start---------------------
                 Status: %s
                 Headers: %s
                 Body: %s
-                -----------------------Response End-----------------------"""
+                """
                 .formatted(response.getStatusCode(), responseHeaders, body);
         log.debug("{}", responseData);
     }
