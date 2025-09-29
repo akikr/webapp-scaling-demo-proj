@@ -30,15 +30,13 @@ public class AppWebClient {
                 .build();
     }
 
-    /**
-     * Creates a custom Jetty {@link HttpClient} that intercepts HTTP requests
-     * to apply tracing using the provided {@link Tracer}.
-     *
-     * @return a configured {@link HttpClient} instance with request interception
-     *
-     * @apiNote This method overrides the default request creation to include
-     * tracing information in each request using the {@link AppWebClientInterceptor}.
-     */
+    /// Creates a custom Jetty [HttpClient] that intercepts HTTP requests
+    /// to apply tracing using the provided [Tracer].
+    ///
+    /// @return a configured [HttpClient] instance with request interception
+    ///
+    /// @apiNote This method overrides the default request creation to include
+    /// tracing information in each request using the [AppWebClientInterceptor].
     private HttpClient getJettyHttpClient() {
         return new HttpClient() {
             @Override

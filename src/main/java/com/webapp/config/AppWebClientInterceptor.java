@@ -39,7 +39,7 @@ public interface AppWebClientInterceptor {
                     """.formatted(headers));
         });
         var requestBody = new StringBuilder();
-        request.onRequestContent((req, content) -> {
+        request.onRequestContent((_, content) -> {
             var body = "[Body not logged]";
             if (properties.includeRequestBody()) {
                 body = getBody(content);
@@ -68,7 +68,7 @@ public interface AppWebClientInterceptor {
                 """.formatted(headers));
         });
         var responseBody = new StringBuilder();
-        request.onResponseContent((res, content) -> {
+        request.onResponseContent((_, content) -> {
             var body = "[Body not logged]";
             if (properties.includeResponseBody()) {
                 body = getBody(content);
@@ -80,7 +80,7 @@ public interface AppWebClientInterceptor {
         });
 
         //Actual logging of request data
-        request.onRequestSuccess(req -> {
+        request.onRequestSuccess(_ -> {
             var body = StringUtils.hasText(requestBody) ? requestBody : "[No-Body]";
             requestData.append("""
                     Body: %s
@@ -90,7 +90,7 @@ public interface AppWebClientInterceptor {
         });
 
         //Actual logging of response data
-        request.onResponseSuccess(res -> {
+        request.onResponseSuccess(_ -> {
             var body = StringUtils.hasText(responseBody) ? responseBody : "[No-Body]";
             responseData.append("""
                     Body: %s

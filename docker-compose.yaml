@@ -73,3 +73,5 @@ services:
         condition: service_started
       webapp-service:
         condition: service_started
+      zipkin-service:
+        condition: service_started

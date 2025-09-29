@@ -28,18 +28,16 @@ public class AppRestClient {
                 .build();
     }
 
-    /**
-     * Intercepts outgoing REST requests to log request and response details
-     *
-     * @param request   the HTTP request to execute
-     * @param body      the body of the request
-     * @param execution the request execution
-     *
-     * @return the HTTP response after execution
-     * @throws IOException if an I/O error occurs
-     *
-     * @apiNote This method uses static logging methods from {@link RestClientInterceptor}
-     */
+    /// Intercepts outgoing REST requests to log request and response details
+    ///
+    /// @param request   the HTTP request to execute
+    /// @param body      the body of the request
+    /// @param execution the request execution
+    ///
+    /// @return the HTTP response after execution
+    /// @throws IOException if an I/O error occurs
+    ///
+    /// @apiNote This method uses static logging methods from [RestClientInterceptor]
     private ClientHttpResponse restClientInterceptor(
             HttpRequest request,
             byte[] body,
