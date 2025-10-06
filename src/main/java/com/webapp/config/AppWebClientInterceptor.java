@@ -16,7 +16,7 @@ public interface AppWebClientInterceptor {
 
     Logger log = LoggerFactory.getLogger(AppWebClientInterceptor.class);
 
-    static Request httpClientInterceptor(Request request, Tracer tracer, RestClientLoggingProperties properties) {
+    static Request httpClientInterceptor(Request request, Tracer tracer, ClientLoggingProperties properties) {
         if (!properties.enabled()) {
             return request; // No logging if disabled
         }
@@ -27,7 +27,7 @@ public interface AppWebClientInterceptor {
                 Id: [%s:%s]
                 """.formatted(span.context().traceId(), span.context().spanId())));
         request.onRequestBegin(req -> requestData.append("""
-                Request: %s %s
+                Client-Request: %s %s
                 """.formatted(req.getMethod(), req.getURI())
         ));
         request.onRequestHeaders(req -> {
@@ -35,7 +35,7 @@ public interface AppWebClientInterceptor {
                     ? req.getHeaders().stream().parallel().toList()
                     : "[Headers not logged]";
             requestData.append("""
-                    Headers: %s
+                    Client-Request-Headers: %s
                     """.formatted(headers));
         });
         var requestBody = new StringBuilder();
@@ -56,7 +56,7 @@ public interface AppWebClientInterceptor {
                 Id: [%s:%s]
                 """.formatted(span.context().traceId(), span.context().spanId())));
         request.onResponseBegin(res -> responseData.append("""
-                Status: %s
+                Client-Response-Status: %s
                 """.formatted(HttpStatus.valueOf(res.getStatus()))
         ));
         request.onResponseHeaders(res -> {
@@ -64,7 +64,7 @@ public interface AppWebClientInterceptor {
                     ? res.getHeaders().stream().parallel().toList()
                     : "[Headers not logged]";
             responseData.append("""
-                Headers: %s
+                Client-Response-Headers: %s
                 """.formatted(headers));
         });
         var responseBody = new StringBuilder();
@@ -83,7 +83,7 @@ public interface AppWebClientInterceptor {
         request.onRequestSuccess(_ -> {
             var body = StringUtils.hasText(requestBody) ? requestBody : "[No-Body]";
             requestData.append("""
-                    Body: %s
+                    Client-Request-Body: %s
                     """
                     .formatted(body));
             log.debug("{}", requestData);
@@ -93,7 +93,7 @@ public interface AppWebClientInterceptor {
         request.onResponseSuccess(_ -> {
             var body = StringUtils.hasText(responseBody) ? responseBody : "[No-Body]";
             responseData.append("""
-                    Body: %s
+                    Client-Response-Body: %s
                     """
                     .formatted(body));
             log.debug("{}", responseData);

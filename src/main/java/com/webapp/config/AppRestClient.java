@@ -15,9 +15,9 @@ import static com.webapp.config.RestClientInterceptor.logResponse;
 @Configuration
 public class AppRestClient {
 
-    private final RestClientLoggingProperties properties;
+    private final ClientLoggingProperties properties;
 
-    public AppRestClient(RestClientLoggingProperties properties) {
+    public AppRestClient(ClientLoggingProperties properties) {
         this.properties = properties;
     }
 

@@ -14,8 +14,12 @@ public interface RestClientInterceptor {
 
     Logger log = LoggerFactory.getLogger(RestClientInterceptor.class);
 
-    static void logRequest(HttpRequest request, byte[] requestBody, RestClientLoggingProperties properties) {
+    static void logRequest(HttpRequest request, byte[] requestBody, ClientLoggingProperties properties) {
+        log.info("Client-Request: {} {}", request.getMethod(), request.getURI());
+
         var requestHeaders = properties.includeRequestHeaders() ? request.getHeaders().toString() : "[Headers not logged]";
+        log.debug("Client-Request-Headers: {}", requestHeaders);
+
         var body = "[Body not logged]";
         if (properties.includeRequestBody()) {
             body = (nonNull(requestBody) && requestBody.length > 0)
@@ -24,18 +28,15 @@ public interface RestClientInterceptor {
                 body = body.substring(0, properties.maxBodyLength()) + "...[truncated]";
             }
         }
-
-        var requestData = """
-                Request: %s %s
-                Headers: %s
-                Body: %s
-                """
-                .formatted(request.getMethod(), request.getURI(), requestHeaders, body);
-        log.debug("{}", requestData);
+        log.debug("Client-Request-Body: {}", body);
     }
 
-    static void logResponse(ClientHttpResponse response, RestClientLoggingProperties properties) throws IOException {
+    static void logResponse(ClientHttpResponse response, ClientLoggingProperties properties) throws IOException {
+        log.debug("Client-Response-Status: {}", response.getStatusCode());
+
         var responseHeaders = properties.includeResponseHeaders() ? response.getHeaders().toString() : "[Headers not logged]";
+        log.debug("Client-Response-Headers: {}", responseHeaders);
+
         var body = "[Body not logged]";
         if (properties.includeResponseBody()) {
             byte[] responseBody = response.getBody().readAllBytes();
@@ -44,13 +45,6 @@ public interface RestClientInterceptor {
                 body = body.substring(0, properties.maxBodyLength()) + "...[truncated]";
             }
         }
-
-        var responseData = """
-                Status: %s
-                Headers: %s
-                Body: %s
-                """
-                .formatted(response.getStatusCode(), responseHeaders, body);
-        log.debug("{}", responseData);
+        log.debug("Client-Response-Body: {}", body);
     }
 }

@@ -1,15 +1,16 @@
 package com.webapp;
 
+import com.webapp.config.AppFilterProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
-import com.webapp.config.RestClientLoggingProperties;
+import com.webapp.config.ClientLoggingProperties;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import java.util.Arrays;
 
-@EnableConfigurationProperties(RestClientLoggingProperties.class)
+@EnableConfigurationProperties(value = {ClientLoggingProperties.class, AppFilterProperties.class})
 @SpringBootApplication
 public class Webapp
 {
@@ -22,6 +23,7 @@ public class Webapp
 		var availableThreads = Integer.toString(Runtime.getRuntime().availableProcessors());
 		System.setProperty("server.tomcat.threads.max", availableThreads);
 		System.setProperty("jdk.virtualThreadScheduler.maxPoolSize", availableThreads);
+        log.info("Starting webapp with server-tomcat-threads-max and max-pool-size as:[{}]", availableThreads);
 
 		SpringApplication.run(Webapp.class, args);
 

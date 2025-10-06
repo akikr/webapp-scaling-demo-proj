@@ -16,9 +16,9 @@ import static com.webapp.config.AppWebClientInterceptor.httpClientInterceptor;
 public class AppWebClient {
 
     private final Tracer tracer;
-    private final RestClientLoggingProperties properties;
+    private final ClientLoggingProperties properties;
 
-    public AppWebClient(Tracer tracer, RestClientLoggingProperties properties) {
+    public AppWebClient(Tracer tracer, ClientLoggingProperties properties) {
         this.tracer = tracer;
         this.properties = properties;
     }
