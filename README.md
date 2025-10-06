@@ -67,11 +67,11 @@ sdk env
 ```bash
 ./mvnw clean package
 #OR
-docker compose -f docker-compose.yaml up --build
+docker-compose -f docker-compose.yaml up --build
 ```
 - Run project [local]:-
 ```bash
-docker compose -f docker-compose.yaml up;docker compose -f docker-compose.yaml down
+docker-compose -f docker-compose.yaml up;docker-compose -f docker-compose.yaml down
 ```
 ---
  Dockerfile [A multi-stage Dockerfile]:-
@@ -198,7 +198,7 @@ services:
 ```
 - Run and see logs for webapp-service using docker-compose:-
 ```bash
-docker compose up -d;docker compose logs -f webapp-service;docker compose down 
+docker-compose up -d;docker-compose logs -f webapp-service;docker-compose down 
 ```
 ---
 - Testing tools:-
