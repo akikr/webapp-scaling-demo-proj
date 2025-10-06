@@ -14,7 +14,7 @@ services:
     image: webapp-service:v1
     environment:
       - APP_ARGS=--spring.profiles.active=dev --spring.threads.virtual.enabled=true --http-bin.server.url=http://httpbin-service:8080 --management.zipkin.tracing.endpoint=http://zipkin-service:9411/api/v2/spans
-      #- JAVA_OPTS=-Xmx300m
+      - JAVA_OPTS=--enable-native-access=ALL-UNNAMED
     ports:
       - "8090"
     labels:
