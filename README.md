@@ -203,7 +203,7 @@ docker-compose up -d;docker-compose logs -f webapp-service;docker-compose down
 ---
 - Testing tools:-
     - Use a [﻿httpbin.org](https://httpbin.org/) as a server-service in docker-container: `mccutchen/go-httpbin:latest` 
-    - Use a HTTP load generator: [﻿oha](https://github.com/hatoo/oha) to run a load test
+    - Use an HTTP load generator: [﻿oha](https://github.com/hatoo/oha) to run a load test
 
 
 - Load test results [Deployed using docker compose] :-
@@ -222,7 +222,7 @@ docker-compose up -d;docker-compose logs -f webapp-service;docker-compose down
 ```
 - with traditional java-threads:-
 ```
-❯ oha -c 50 -n 100 http://localhost/api/webapp/delay/3
+❯ oha -c 50 -n 100 http://localhost/api/webapp/v1/delay/3
 Summary:
   Success rate: 100.00%
   Total:	151.0207 secs
@@ -233,7 +233,7 @@ Summary:
 ```
 - with virtual java-threads:-
 ```
-❯ oha -c 50 -n 100 http://localhost/api/webapp/delay/3
+❯ oha -c 50 -n 100 http://localhost/api/webapp/v1/delay/3
 Summary:
   Success rate: 100.00%
   Total:	6.1450 secs

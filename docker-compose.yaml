@@ -14,7 +14,7 @@ services:
     image: webapp-service:v1
     environment:
       - APP_ARGS=--spring.profiles.active=dev --spring.threads.virtual.enabled=true --http-bin.server.url=http://httpbin-service:8080 --management.zipkin.tracing.endpoint=http://zipkin-service:9411/api/v2/spans
-      - JAVA_OPTS=--enable-native-access=ALL-UNNAMED
+      - JAVA_OPTS=-XX:+ExitOnOutOfMemoryError -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/dump --enable-native-access=ALL-UNNAMED
     ports:
       - "8090"
     labels:
@@ -42,6 +42,9 @@ services:
         condition: service_started
       zipkin-service:
         condition: service_started
+#    volumes:
+#      # Mount host directory to container to store heap dumps
+#      - ./target/dumps:/var/dump
 
   zipkin-service:
     image: openzipkin/zipkin:latest
