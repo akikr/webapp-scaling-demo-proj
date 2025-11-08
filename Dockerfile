@@ -1,11 +1,22 @@
+# Declare the build-image arg
+ARG BASE_IMAGE=maven:3-eclipse-temurin-25-alpine
+ARG BUILD_IMAGE=eclipse-temurin:25-alpine
+
 # Set the base-image for build stage
-FROM maven:3-eclipse-temurin-25-alpine AS build
+FROM ${BASE_IMAGE} AS base
 # Set up working directory
 RUN mkdir -p /usr/app
 COPY . /usr/app
 WORKDIR /usr/app
 # Build the application
 RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests
+
+# Set the build-image for build stage
+FROM ${BUILD_IMAGE} AS build
+# Copy the artifact from build-stage
+RUN mkdir -p /usr/app
+COPY --from=base /usr/app/target /usr/app/target
+WORKDIR /usr/app
 # Build the application specific JRE
 RUN jdeps --ignore-missing-deps -q \
     --recursive \
