@@ -101,6 +101,7 @@
                     <execution>
                         <goals>
                             <goal>repackage</goal>
+                            <goal>build-info</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -127,6 +128,23 @@
                         <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
                     </configuration>
                   </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.cyclonedx</groupId>
+                <artifactId>cyclonedx-maven-plugin</artifactId>
+                <configuration>
+                    <verbose>true</verbose>
+                    <outputFormat>json</outputFormat>
+                    <includeTestScope>true</includeTestScope>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>makeAggregateBom</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
