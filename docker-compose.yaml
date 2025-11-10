@@ -11,10 +11,30 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+#      args:
+#        RUNTIME_JDK_IMAGE: eclipse-temurin:<jdk-version>-alpine
+#        RUNTIME_JDK_VERSION: <jdk-version>
     image: webapp-service:v1
     environment:
-      - APP_ARGS=--spring.profiles.active=dev --spring.threads.virtual.enabled=true --http-bin.server.url=http://httpbin-service:8080 --management.zipkin.tracing.endpoint=http://zipkin-service:9411/api/v2/spans
-      - JAVA_OPTS=-XX:+ExitOnOutOfMemoryError -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/dump --enable-native-access=ALL-UNNAMED
+      APP_ARGS: >-
+        --spring.profiles.active=dev
+        --spring.threads.virtual.enabled=true
+        --http-bin.server.url=http://httpbin-service:8080
+        --management.tracing.sampling.probability=1.0
+        --management.zipkin.tracing.connect-timeout=5s
+        --management.zipkin.tracing.read-timeout=10s
+        --management.zipkin.tracing.endpoint=http://zipkin-service:9411/api/v2/spans
+      JAVA_OPTS: >-
+        -XX:UseSVE=0
+        -XX:+ExitOnOutOfMemoryError
+        -XX:+HeapDumpOnOutOfMemoryError
+        -XX:HeapDumpPath=/var/dumps
+        -XX:MaxRAMPercentage=50
+        -Xss256k
+        -XX:ReservedCodeCacheSize=64m
+        -XX:MaxMetaspaceSize=96m
+        -XX:+UseStringDeduplication
+        --enable-native-access=ALL-UNNAMED
     ports:
       - "8090"
     labels:
@@ -44,7 +64,7 @@ services:
         condition: service_started
 #    volumes:
 #      # Mount host directory to container to store heap dumps
-#      - ./target/dumps:/var/dump
+#      - /tmp/colima/webapp/dumps:/var/dump
 
   zipkin-service:
     image: openzipkin/zipkin:latest

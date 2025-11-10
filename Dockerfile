@@ -1,9 +1,8 @@
-# Declare the build-image arg
-ARG BASE_IMAGE=maven:3-eclipse-temurin-25-alpine
-ARG BUILD_IMAGE=eclipse-temurin:25-alpine
+# Declare the runtime JDK image arg
+ARG RUNTIME_JDK_IMAGE=eclipse-temurin:25-alpine
 
 # Set the base-image for build stage
-FROM ${BASE_IMAGE} AS base
+FROM maven:3-eclipse-temurin-25-alpine AS build
 # Set up working directory
 RUN mkdir -p /usr/app
 COPY . /usr/app
@@ -11,16 +10,20 @@ WORKDIR /usr/app
 # Build the application
 RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -DskipTests
 
-# Set the build-image for build stage
-FROM ${BUILD_IMAGE} AS build
-# Copy the artifact from build-stage
+# Set the runtime JDK image for run stage
+FROM ${RUNTIME_JDK_IMAGE} AS run
+# Declare the runtime JDK image version arg
+ARG RUNTIME_JDK_VERSION=25
+# Copy the artifact from run-stage
 RUN mkdir -p /usr/app
-COPY --from=base /usr/app/target /usr/app/target
+COPY --from=build /usr/app/target /usr/app/target
 WORKDIR /usr/app
+# Get the JDK version from run JDK args
+RUN echo ${RUNTIME_JDK_VERSION} > jdk.version
 # Build the application specific JRE
 RUN jdeps --ignore-missing-deps -q \
     --recursive \
-    --multi-release 25 \
+    --multi-release $(cat jdk.version) \
     --print-module-deps \
     --class-path 'target/dependencies/*' \
     target/*.jar > modules.info
@@ -32,13 +35,13 @@ RUN jlink --add-modules jdk.management,$(cat modules.info) \
 
 # Set the base-image for final stage
 FROM alpine:latest@sha256:77726ef6b57ddf65bb551896826ec38bc3e53f75cdde31354fbffb4f25238ebd
-# Set JAVA_HOME using application specific JRE from build-stage
-ENV JAVA_HOME /usr/lib/java/jre
-ENV PATH $JAVA_HOME/bin:$PATH
-COPY --from=build /app-jre $JAVA_HOME
-# Copy the artifact from build-stage
+# Set JAVA_HOME using application specific JRE from run-stage
+ENV JAVA_HOME=/usr/lib/java/jre
+ENV PATH=$JAVA_HOME/bin:$PATH
+COPY --from=run /app-jre $JAVA_HOME
+# Copy the artifact from run-stage
 RUN mkdir -p /usr/webapp
-COPY --from=build /usr/app/target/*.jar /usr/webapp/webapp-service.jar
+COPY --from=run /usr/app/target/*.jar /usr/webapp/webapp-service.jar
 WORKDIR /usr/webapp
 # Define environment variables for java-options and application-arguments
 ENV JAVA_OPTS=""
