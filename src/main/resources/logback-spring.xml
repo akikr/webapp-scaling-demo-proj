@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <!-- Import the console pattern from application.properties -->
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
+    <springProperty scope="context" name="APP_CONSOLE_PATTERN" source="logging.pattern.console"/>
+
+    <!-- Define the standard Console Appender -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${APP_CONSOLE_PATTERN:-[%X${APP_NAME:-}]}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Wrap the Console Appender with AsyncAppender -->
+    <appender name="ASYNC_CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="CONSOLE" />
+        <!-- Queue size (default is 256) -->
+        <queueSize>512</queueSize>
+        <!-- 0 means never drop events (default drops TRACE/DEBUG/INFO when queue is 80% full) -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- false improves performance by not extracting caller data (file, line, method) -->
+        <includeCallerData>false</includeCallerData>
+    </appender>
+
+    <!-- Configure Root Logger to use the Async Appender -->
+    <root level="INFO">
+        <appender-ref ref="ASYNC_CONSOLE" />
+    </root>
+</configuration>
